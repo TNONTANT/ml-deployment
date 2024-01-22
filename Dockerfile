@@ -14,11 +14,13 @@ RUN pip install \
     cython==0.29.35 \
     numpy==1.24.3 \
     pandas==2.0.1 \
-    pystan==3.7.0
+    pystan==3.7.0 \
+    gunicorn
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT
+# CMD gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT
+CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8008", "main:app"]
